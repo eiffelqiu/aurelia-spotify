@@ -16,7 +16,7 @@
   <div repeat.for="artist of searchRes">
     <div class="row well">
       <div class="col-md-12">
-        <h4><a href="/artist/${artist.id}">${artist.name}</a></h4>
+        <h4><a route-href="route:artist;params.bind:{ id: artist.id }">${artist.name}</a></h4>
         <div>
           <strong>Genres: </strong>
           <span repeat.for="genre of artist.genres"> ${genre}</span>

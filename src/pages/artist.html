@@ -1,3 +1,25 @@
 <template>
-	<h4>Artist</h4>
+  <header class="artist-header">
+    <div if.bind="artist.images.length > 0">
+      <img class="artist-thumb img-circle" src="${artist.images[0].url}"/>
+    </div>
+    <h1>${artist.name}</h1>
+    <div if.bind="artist.genres.length > 0">
+      Genres: <span repeat.for="genre of artist.genres">${genre}</span>
+    </div>
+  </header>
+
+  <div class="artist-albums">
+    <div class="row">
+      <div repeat.for="album of albums">
+        <div class="col-md-3">
+          <div class="album well">
+            <img src="${album.images[0].url}" alt="${album.name}" class="album-thumb img-thumbnail">
+            <h4>${album.name}</h4>
+            <a href="#" class="btn btn-default btn-block">Album Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

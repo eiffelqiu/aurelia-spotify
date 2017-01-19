@@ -16,15 +16,21 @@ export class App {
 				title: "About"
 			},
 			{
-				route: "artist/:id",
-				href: "artist",
+				route: "artist",
+				name: "artist",
 				moduleId: "./pages/artist",
 				nav: true,
 				title: "Artist"
-			}
+			},
+      {
+        route: "album",
+        name: "album",
+        moduleId: "./pages/album",
+        nav: true,
+        title: "Album"
+      }
 		]);
 
-		config.mapUnknownRoutes('not-found');
 		config.fallbackRoute('spotify');
 	}
 }

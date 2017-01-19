@@ -30,14 +30,19 @@ define('app',["exports"], function (exports) {
 				nav: true,
 				title: "About"
 			}, {
-				route: "artist/:id",
-				href: "artist",
+				route: "artist",
+				name: "artist",
 				moduleId: "./pages/artist",
 				nav: true,
 				title: "Artist"
+			}, {
+				route: "album",
+				name: "album",
+				moduleId: "./pages/album",
+				nav: true,
+				title: "Album"
 			}]);
 
-			config.mapUnknownRoutes('not-found');
 			config.fallbackRoute('spotify');
 		};
 
@@ -112,32 +117,64 @@ define('pages/about',["exports"], function (exports) {
 	};
 });
 define('pages/artist',['exports', 'aurelia-framework', 'aurelia-http-client'], function (exports, _aureliaFramework, _aureliaHttpClient) {
-	'use strict';
+  'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.Artist = undefined;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Artist = undefined;
 
-	function _classCallCheck(instance, Constructor) {
-		if (!(instance instanceof Constructor)) {
-			throw new TypeError("Cannot call a class as a function");
-		}
-	}
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-	var _dec, _class;
+  var _dec, _class;
 
-	var Artist = exports.Artist = (_dec = (0, _aureliaFramework.inject)(_aureliaHttpClient.HttpClient), _dec(_class = function () {
-		function Artist(http) {
-			_classCallCheck(this, Artist);
+  var Artist = exports.Artist = (_dec = (0, _aureliaFramework.inject)(_aureliaHttpClient.HttpClient), _dec(_class = function () {
+    function Artist(http) {
+      _classCallCheck(this, Artist);
 
-			this.http = http;
-		}
+      this.artist = {};
+      this.albums = [];
 
-		Artist.prototype.activate = function activate() {};
+      this.http = http;
+    }
 
-		return Artist;
-	}()) || _class);
+    Artist.prototype.activate = function activate(params, config) {
+      this.getArtist(params.id);
+      this.getAlbum(params.id);
+    };
+
+    Artist.prototype.getArtist = function getArtist(id) {
+      var _this = this;
+
+      if (id !== '') {
+        this.artistUrl = 'https://api.spotify.com/v1/artists/' + id;
+        return this.http.get(this.artistUrl).then(function (res) {
+          return _this.artist = res.content;
+        });
+      } else {
+        this.artist = {};
+      }
+    };
+
+    Artist.prototype.getAlbum = function getAlbum(id) {
+      var _this2 = this;
+
+      if (id !== '') {
+        this.albumUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
+        return this.http.get(this.albumUrl).then(function (res) {
+          return _this2.albums = res.content.items;
+        });
+      } else {
+        this.album = [];
+      }
+    };
+
+    return Artist;
+  }()) || _class);
 });
 define('pages/menu',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
 	'use strict';
@@ -263,9 +300,56 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"./pages/menu\"></require>\n\t<menu router.bind=\"router\" containerless></menu>\n  \t<div class=\"container\">\n    \t<router-view></router-view>\n\t</div>\n</template>\n"; });
+define('pages/album',['exports', 'aurelia-framework', 'aurelia-http-client'], function (exports, _aureliaFramework, _aureliaHttpClient) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Album = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _dec, _class;
+
+  var Album = exports.Album = (_dec = (0, _aureliaFramework.inject)(_aureliaHttpClient.HttpClient), _dec(_class = function () {
+    function Album(http) {
+      _classCallCheck(this, Album);
+
+      this.albums = {};
+
+      this.http = http;
+    }
+
+    Album.prototype.activate = function activate(params, config) {
+      this.getAlbum(params.id);
+    };
+
+    Album.prototype.getAlbum = function getAlbum(id) {
+      var _this = this;
+
+      if (id !== '') {
+        this.albumUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
+        return this.http.get(this.albumUrl).then(function (res) {
+          return _this.albums = res.content.items;
+        });
+      } else {
+        this.album = {};
+      }
+    };
+
+    return Album;
+  }()) || _class);
+});
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"app.css\"></require>\n\t<require from=\"./pages/menu\"></require>\n\t<menu router.bind=\"router\" containerless></menu>\n  \t<div class=\"container\">\n    \t<router-view></router-view>\n\t</div>\n</template>\n"; });
+define('text!app.css', ['module'], function(module) { module.exports = "body {\n  border-bottom: #333 ipx solid;\n  padding: 30px;\n}\n\n.artist-header {\n  border-bottom: 20px;\n  margin-bottom: 20px;\n  border-bottom: solid 1px #333\n}\n\n.artist-thumb {\n\twidth: 80px;\n\theight: auto;\n\tfloat: left;\n\tmargin-right:10px;\n}\n\n.artist-albums .well {\n  margin-bottom: 20px;\n  overflow: auto;\n  min-height: 400px;\n}\n\n.album {\n  text-align: center;\n  background: #333;\n  padding: 10px 20px;\n  border: #666 1px solid;\n}\n\n.album-thumb {\n  width: 100%;\n}\n"; });
 define('text!pages/about.html', ['module'], function(module) { module.exports = "<template>\n\t<h4>This page was built with Aurelia for demo purpose.</h4>\n  \t<a class=\"btn btn-danger\" href=\"http://github.com/eiffelqiu\">Eiffel' Github</a>\n</template>\n"; });
-define('text!pages/artist.html', ['module'], function(module) { module.exports = "<template>\n\t<h4>Artist</h4>\n</template>"; });
+define('text!pages/artist.html', ['module'], function(module) { module.exports = "<template>\n  <header class=\"artist-header\">\n    <div if.bind=\"artist.images.length > 0\">\n      <img class=\"artist-thumb img-circle\" src=\"${artist.images[0].url}\"/>\n    </div>\n    <h1>${artist.name}</h1>\n    <div if.bind=\"artist.genres.length > 0\">\n      Genres: <span repeat.for=\"genre of artist.genres\">${genre}</span>\n    </div>\n  </header>\n\n  <div class=\"artist-albums\">\n    <div class=\"row\">\n      <div repeat.for=\"album of albums\">\n        <div class=\"col-md-3\">\n          <div class=\"album well\">\n            <img src=\"${album.images[0].url}\" alt=\"${album.name}\" class=\"album-thumb img-thumbnail\">\n            <h4>${album.name}</h4>\n            <a href=\"#\" class=\"btn btn-default btn-block\">Album Details</a>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n"; });
 define('text!pages/menu.html', ['module'], function(module) { module.exports = "<template>\n    <nav class=\"navbar navbar-inverse\">\n      <div class=\"container\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n        </div>\n        <div id=\"navbar\" class=\"collapse navbar-collapse\">\n          <ul class=\"nav navbar-nav\">\n      \t\t\t<li repeat.for=\"route of router.navigation\">\n      \t\t\t\t<a href.bind=\"route.href\">${route.title}</a>\n      \t\t\t</li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n</template>"; });
-define('text!pages/spotify.html', ['module'], function(module) { module.exports = "<template>\n\n  <h1>Need Music?</h1>\n  <p class=\"lead\">Use the Aurelia-Spotify app to browse new releases and find your favorite songs.</p>\n\n  <form>\n      <div class=\"row\">\n        <div class=\"col-md-12 \">\n          <input type=\"text\" class=\"form-control col-md-3\" placeholder=\"Search Artists...\"\n                 name=\"searchStr\" value.bind=\"searchStr\" keyup.trigger=\"searchMusic()\">\n        </div>\n      </div>\n  </form> \n\n  <hr/>\n  <div repeat.for=\"artist of searchRes\">\n    <div class=\"row well\">\n      <div class=\"col-md-12\">\n        <h4><a href=\"/artist/${artist.id}\">${artist.name}</a></h4>\n        <div>\n          <strong>Genres: </strong>\n          <span repeat.for=\"genre of artist.genres\"> ${genre}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</template>"; });
+define('text!pages/spotify.html', ['module'], function(module) { module.exports = "<template>\n\n  <h1>Need Music?</h1>\n  <p class=\"lead\">Use the Aurelia-Spotify app to browse new releases and find your favorite songs.</p>\n\n  <form>\n      <div class=\"row\">\n        <div class=\"col-md-12 \">\n          <input type=\"text\" class=\"form-control col-md-3\" placeholder=\"Search Artists...\"\n                 name=\"searchStr\" value.bind=\"searchStr\" keyup.trigger=\"searchMusic()\">\n        </div>\n      </div>\n  </form> \n\n  <hr/>\n  <div repeat.for=\"artist of searchRes\">\n    <div class=\"row well\">\n      <div class=\"col-md-12\">\n        <h4><a route-href=\"route:artist;params.bind:{ id: artist.id }\">${artist.name}</a></h4>\n        <div>\n          <strong>Genres: </strong>\n          <span repeat.for=\"genre of artist.genres\"> ${genre}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</template>"; });
+define('text!pages/album.html', ['module'], function(module) { module.exports = "<template>\n\n</template>\n"; });
 //# sourceMappingURL=app-bundle.js.map

@@ -16,7 +16,7 @@
           <div class="album well">
             <img src="${album.images[0].url}" alt="${album.name}" class="album-thumb img-thumbnail">
             <h4>${album.name}</h4>
-            <a href="#" class="btn btn-default btn-block">Album Details</a>
+            <a route-href="route:album;params.bind:{ id: album.id }" class="btn btn-default btn-block">Album Details</a>
           </div>
         </div>
       </div>

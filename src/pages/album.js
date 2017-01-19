@@ -3,7 +3,7 @@ import {HttpClient} from 'aurelia-http-client';
 
 @inject(HttpClient)
 export class Album {
-  albums = {};
+  album = {};
 
   constructor(http) {
     this.http = http;
@@ -15,8 +15,8 @@ export class Album {
 
   getAlbum(id) {
     if (id !== '' ) {
-      this.albumUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
-      return this.http.get(this.albumUrl).then(res => this.albums = res.content.items );
+      this.albumUrl = 'https://api.spotify.com/v1/albums/' + id ;
+      return this.http.get(this.albumUrl).then(res => {this.album = res.content; console.log(res.content);}  );
     } else {
       this.album = {};
     }

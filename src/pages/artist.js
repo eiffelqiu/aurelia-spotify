@@ -12,7 +12,7 @@ export class Artist {
 
 	activate(params, config) {
     this.getArtist(params.id);
-    this.getAlbum(params.id);
+    this.getAlbums(params.id);
 	}
 
 	getArtist(id) {
@@ -24,12 +24,12 @@ export class Artist {
     }
   }
 
-  getAlbum(id) {
+  getAlbums(id) {
     if (id !== '' ) {
-      this.albumUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
-      return this.http.get(this.albumUrl).then(res => this.albums = res.content.items );
+      this.albumsUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
+      return this.http.get(this.albumsUrl).then(res => this.albums = res.content.items );
     } else {
-      this.album = [];
+      this.albums = [];
     }
   }
 }

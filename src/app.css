@@ -23,7 +23,7 @@ body {
 }
 
 .album {
-  text-align: center;
+  text-align: left;
   background: #333;
   padding: 10px 20px;
   border: #666 1px solid;

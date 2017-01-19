@@ -1,3 +1,30 @@
 <template>
-
+  <div class="album" if.bind="album">
+      <header class="album-header">
+        <div class="row">
+          <div class="col-md-4">
+            <img class="album-thumb" src="${album.images[0].url}">
+          </div>
+          <div class="col-md-8">
+            <h4 if.bind="album.artist.length > 0">
+              <span repeat.for="artist of album.artists">
+                ${artist.name}
+              </span>
+            </h4>
+            <h2>${album.name}</h2>
+            <h5>Release Date: ${album.release_date}</h5>
+            <a href="${album.external_urls.spotify}" class="btn btn-primary" target="_blank">View in Spotify</a>
+          </div>
+        </div>
+      </header>
+      <div class="album-tracks">
+        <h2>Album Tracks</h2>
+        <div repeat.for="track of album.tracks.items">
+          <div class="well">
+            <h5>${track.track_number} -  ${track.name}</h5>
+            <a href="${track.preview_url}" target="_blank">Preview Track</a>
+          </div>
+        </div>
+      </div>
+  </div>
 </template>

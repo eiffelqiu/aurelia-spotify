@@ -6,6 +6,7 @@ Aurelia Spotify SPA built with Aurelia framework
 
 ![screen 2](https://github.com/eiffelqiu/aurelia-spotify/blob/master/capture2.jpg?raw=true)
 
+![screen 3](https://github.com/eiffelqiu/aurelia-spotify/blob/master/capture3.jpg?raw=true)
 
 **Prerequisite**
 ```bash

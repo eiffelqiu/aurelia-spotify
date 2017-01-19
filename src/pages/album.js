@@ -3,10 +3,10 @@ import {HttpClient} from 'aurelia-http-client';
 
 @inject(HttpClient)
 export class Album {
-  album = {};
 
   constructor(http) {
     this.http = http;
+    this.album = {};
   }
 
   activate(params, config) {

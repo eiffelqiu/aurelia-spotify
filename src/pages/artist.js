@@ -3,11 +3,11 @@ import {HttpClient} from 'aurelia-http-client';
 
 @inject(HttpClient)
 export class Artist {
-	artist = {};
-  albums = [];
 
 	constructor(http) {
 		this.http = http;
+    this.artist = {};
+    this.albums = [];
 	}
 
 	activate(params, config) {

@@ -3,10 +3,10 @@ import {HttpClient} from 'aurelia-http-client';
 
 @inject(HttpClient)
 export class Github {
-  searchRes = [];
 
 	constructor(http) {
 		this.http = http;
+    this.searchRes = [];
 	}
 
 	activate() {

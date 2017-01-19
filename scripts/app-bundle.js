@@ -136,9 +136,8 @@ define('pages/album',['exports', 'aurelia-framework', 'aurelia-http-client'], fu
     function Album(http) {
       _classCallCheck(this, Album);
 
-      this.album = {};
-
       this.http = http;
+      this.album = {};
     }
 
     Album.prototype.activate = function activate(params, config) {
@@ -181,10 +180,9 @@ define('pages/artist',['exports', 'aurelia-framework', 'aurelia-http-client'], f
     function Artist(http) {
       _classCallCheck(this, Artist);
 
+      this.http = http;
       this.artist = {};
       this.albums = [];
-
-      this.http = http;
     }
 
     Artist.prototype.activate = function activate(params, config) {
@@ -311,9 +309,8 @@ define('pages/spotify',['exports', 'aurelia-framework', 'aurelia-http-client'], 
     function Github(http) {
       _classCallCheck(this, Github);
 
-      this.searchRes = [];
-
       this.http = http;
+      this.searchRes = [];
     }
 
     Github.prototype.activate = function activate() {

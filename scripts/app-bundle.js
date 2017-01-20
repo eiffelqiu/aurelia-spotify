@@ -147,14 +147,10 @@ define('pages/album',['exports', 'aurelia-framework', 'aurelia-http-client'], fu
     Album.prototype.getAlbum = function getAlbum(id) {
       var _this = this;
 
-      if (id !== '') {
-        this.albumUrl = 'https://api.spotify.com/v1/albums/' + id;
-        return this.http.get(this.albumUrl).then(function (res) {
-          _this.album = res.content;console.log(res.content);
-        });
-      } else {
-        this.album = {};
-      }
+      this.albumUrl = 'https://api.spotify.com/v1/albums/' + id;
+      return this.http.get(this.albumUrl).then(function (res) {
+        return _this.album = res.content;
+      });
     };
 
     return Album;
@@ -193,27 +189,19 @@ define('pages/artist',['exports', 'aurelia-framework', 'aurelia-http-client'], f
     Artist.prototype.getArtist = function getArtist(id) {
       var _this = this;
 
-      if (id !== '') {
-        this.artistUrl = 'https://api.spotify.com/v1/artists/' + id;
-        return this.http.get(this.artistUrl).then(function (res) {
-          return _this.artist = res.content;
-        });
-      } else {
-        this.artist = {};
-      }
+      this.artistUrl = 'https://api.spotify.com/v1/artists/' + id;
+      return this.http.get(this.artistUrl).then(function (res) {
+        return _this.artist = res.content;
+      });
     };
 
     Artist.prototype.getAlbums = function getAlbums(id) {
       var _this2 = this;
 
-      if (id !== '') {
-        this.albumsUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
-        return this.http.get(this.albumsUrl).then(function (res) {
-          return _this2.albums = res.content.items;
-        });
-      } else {
-        this.albums = [];
-      }
+      this.albumsUrl = 'https://api.spotify.com/v1/artists/' + id + '/albums';
+      return this.http.get(this.albumsUrl).then(function (res) {
+        return _this2.albums = res.content.items;
+      });
     };
 
     return Artist;
@@ -342,8 +330,8 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"app.css\"></require>\n\t<require from=\"./pages/menu\"></require>\n\t<menu router.bind=\"router\" containerless></menu>\n  \t<div class=\"container\">\n    \t<router-view></router-view>\n\t</div>\n</template>\n"; });
 define('text!app.css', ['module'], function(module) { module.exports = "body {\n  border-bottom: #333 ipx solid;\n  padding: 0px;\n}\n\n.artist-header {\n  border-bottom: 20px;\n  margin-bottom: 20px;\n  border-bottom: solid 1px #333\n}\n\n.artist-thumb {\n\twidth: 80px;\n\theight: auto;\n\tfloat: left;\n\tmargin-right:10px;\n}\n\n.artist-albums .well {\n  margin-bottom: 20px;\n  overflow: auto;\n  min-height: 400px;\n}\n\n.album {\n  text-align: left;\n  background: #333;\n  padding: 10px 20px;\n  border: #666 1px solid;\n}\n\n.album-thumb {\n  width: 100%;\n}\n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\n\t<require from=\"app.css\"></require>\n\t<require from=\"./pages/menu\"></require>\n\t<menu router.bind=\"router\" containerless></menu>\n  \t<div class=\"container\">\n    \t<router-view></router-view>\n\t</div>\n</template>\n"; });
 define('text!pages/about.html', ['module'], function(module) { module.exports = "<template>\n\t<h4>This page was built with Aurelia for demo purpose.</h4>\n  \t<a class=\"btn btn-danger\" href=\"http://github.com/eiffelqiu\">Eiffel' Github</a>\n</template>\n"; });
 define('text!pages/album.html', ['module'], function(module) { module.exports = "<template>\n  <div class=\"album\" if.bind=\"album\">\n      <header class=\"album-header\">\n        <div class=\"row\">\n          <div class=\"col-md-4\">\n            <img class=\"album-thumb\" src=\"${album.images[0].url}\">\n          </div>\n          <div class=\"col-md-8\">\n            <h4 if.bind=\"album.artist.length > 0\">\n              <span repeat.for=\"artist of album.artists\">\n                ${artist.name}\n              </span>\n            </h4>\n            <h2>${album.name}</h2>\n            <h5>Release Date: ${album.release_date}</h5>\n            <a href=\"${album.external_urls.spotify}\" class=\"btn btn-primary\" target=\"_blank\">View in Spotify</a>\n          </div>\n        </div>\n      </header>\n      <div class=\"album-tracks\">\n        <h2>Album Tracks</h2>\n        <div repeat.for=\"track of album.tracks.items\">\n          <div class=\"well\">\n            <h5>${track.track_number} -  ${track.name}</h5>\n            <a href=\"${track.preview_url}\" target=\"_blank\">Preview Track</a>\n          </div>\n        </div>\n      </div>\n  </div>\n</template>\n"; });
 define('text!pages/artist.html', ['module'], function(module) { module.exports = "<template>\n  <header class=\"artist-header\">\n    <div if.bind=\"artist.images.length > 0\">\n      <img class=\"artist-thumb img-circle\" src=\"${artist.images[0].url}\"/>\n    </div>\n    <h1>${artist.name}</h1>\n    <div if.bind=\"artist.genres.length > 0\">\n      Genres: <span repeat.for=\"genre of artist.genres\">${genre}</span>\n    </div>\n  </header>\n\n  <div class=\"artist-albums\">\n    <div class=\"row\">\n      <div repeat.for=\"album of albums\">\n        <div class=\"col-md-3\">\n          <div class=\"album well\">\n            <img src=\"${album.images[0].url}\" alt=\"${album.name}\" class=\"album-thumb img-thumbnail\">\n            <h4>${album.name}</h4>\n            <a route-href=\"route:album;params.bind:{ id: album.id }\" class=\"btn btn-default btn-block\">Album Details</a>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n"; });
